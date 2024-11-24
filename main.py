@@ -1,37 +1,47 @@
+import argparse
+from gpa_calc import gpa_calc
+
+parser = argparse.ArgumentParser(description="GPA calculator")
+parser.add_argument(
+    "--semester",
+    help="combine & average two semester grades into a year long grade (recommended)",
+    action="store_true",
+)
+args = parser.parse_args()
+
 scale = input("Enter the desired scale (4 or 5): ")
 if scale == "4" or scale == "four":
-    grade_sum = total = cur = 0
-    while cur != -1:
-        cur = float(input("Enter a grade from 0-100 (enter -1 to exit): "))
+    grade_sum = total = 0
+    while True:
+        res = 0.0
 
-        if cur >= 97:
-            grade_sum += 4.0
-        elif cur >= 93:
-            grade_sum += 4.0
-        elif cur >= 90:
-            grade_sum += 3.7
-        elif cur >= 87:
-            grade_sum += 3.3
-        elif cur >= 83:
-            grade_sum += 3.0
-        elif cur >= 80:
-            grade_sum += 2.7
-        elif cur >= 77:
-            grade_sum += 2.3
-        elif cur >= 73:
-            grade_sum += 2.0
-        elif cur >= 70:
-            grade_sum += 1.7
-        elif cur >= 67:
-            grade_sum += 1.3
-        elif cur >= 65:
-            grade_sum += 1.0
-        elif -1 < cur < 65:
-            grade_sum += 0.0
-        elif cur == -1:
-            break
+        if args.semester:
+            first_semester = float(
+                input("Enter your grade for the first semester of class X: ")
+            )
+            if first_semester == -1.0 or first_semester is None:
+                break
+
+            second_semester = float(
+                input("Enter your grade for the second semester of class X: ")
+            )
+
+            if second_semester == -1.0 or first_semester == -1.0:
+                pass
+            else:
+                avg = (first_semester + second_semester) / 2
+                res = gpa_calc(avg)
+
         else:
-            print("Error entering value. Please retry.")
+            cur = float(input("Enter a grade from 0-100 (enter -1 to exit): "))
+            res = gpa_calc(cur)
+
+        if res == -1.0:
+            break
+        elif res is None:
+            pass
+        else:
+            grade_sum += res
 
         total += 1
 
